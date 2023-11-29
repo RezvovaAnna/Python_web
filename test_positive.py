@@ -5,7 +5,6 @@ with open('config.yaml') as f:
     data = yaml.safe_load(f)
 
 
-
 def test_create_post(token, text_title, text_description, text_content):
     # Проверка создания поста
     requests.post(url=data['post_site'], headers={"X-Auth-Token": token},
@@ -24,5 +23,4 @@ def test_find_post(token, text_title):
                            params={"owner": "notMe"})
     title_list = [i['title'] for i in res_get.json()['data']]
     assert 'Cats' in title_list and text_title not in title_list
-
 
