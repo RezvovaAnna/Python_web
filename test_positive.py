@@ -1,16 +1,38 @@
-# This is a sample Python script.
+import requests
+import yaml
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+with open('config.yaml') as f:
+    data = yaml.safe_load(f)
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def test_create_post(token, text_title, text_description, text_content):
+    requests.post(url=data['post_site'], headers={"X-Auth-Token": token},
+                 params={"title": text_title, "description": text_description,
+                         "content": text_content})
+    res_get = requests.get(url=data['post_site'], headers={"X-Auth-Token": token},
+                           params={"owner": 'Me'})
+    description_list = [i['description'] for i in res_get.json()['data']]
+    assert text_description in description_list
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+
+def test_create_post(token, text_title, text_description, text_content):
+    # Проверка создания поста
+    requests.post(url=data['post_site'], headers={"X-Auth-Token": token},
+                 params={"title": text_title, "description": text_description,
+                         "content": text_content})
+    res_get = requests.get(url=data['post_site'], headers={"X-Auth-Token": token},
+                           params={"owner": 'Me'})
+    description_list = [i['description'] for i in res_get.json()['data']]
+    assert text_description in description_list
+
+
+def test_find_post(token, text_title):
+    # Проверка наличия определенного загловка и отсутвия созданого пользователем поста в не его постах
+    res_get = requests.get(url=data['post_site'],
+                           headers={"X-Auth-Token": token},
+                           params={"owner": "notMe"})
+    title_list = [i['title'] for i in res_get.json()['data']]
+    assert 'Cats' in title_list and text_title not in title_list
+
+
