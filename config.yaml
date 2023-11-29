@@ -1,0 +1,4 @@
+login_site: 'https://test-stand.gb.ru/gateway/login'
+post_site: 'https://test-stand.gb.ru/api/posts'
+name: 'Anna_Rezvova'
+passwd: '889081e5c1'
